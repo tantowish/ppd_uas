@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import Literal
 
+# Source: https://archive.ics.uci.edu/dataset/544/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition
+# Note: normal input is from the dataset (min, max)
 class PredictRequest(BaseModel):
     gender: Literal["Male", "Female"] # gender
     age: int # age in years
