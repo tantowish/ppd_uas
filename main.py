@@ -3,8 +3,10 @@ import pandas as pd
 import joblib
 from predict_request import PredictRequest
 from pydantic import ValidationError
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Load model and classes
 model = joblib.load("model/lightgbm_model.pkl")
