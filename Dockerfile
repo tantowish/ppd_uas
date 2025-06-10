@@ -1,20 +1,23 @@
 FROM python:3.11-alpine
 
-# Install dependencies needed to build some packages
+# Install build dependencies
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements file and install Python dependencies
+# Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your app's code
+# Copy application code
 COPY . .
 
-# Expose the port Flask will run on
-EXPOSE 5000
+# Expose port 8080 (required by Cloud Run)
+EXPOSE 8080
 
-# Start the Flask app (change `main` to your actual file name if different)
+# Set environment variable for Flask to find the app (if needed)
+# ENV FLASK_APP=main.py
+
+# Start the Flask app on port 8080 and all interfaces
 CMD ["python", "main.py"]
