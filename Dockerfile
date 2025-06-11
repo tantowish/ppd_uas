@@ -1,25 +1,21 @@
-FROM python:3.10-alpine
-
-# Install system build dependencies
-RUN apk add --no-cache \
-    gcc \
-    musl-dev \
-    libffi-dev \
-    g++ \
-    libc-dev \
-    linux-headers \
-    openblas-dev \
-    freetype-dev \
-    lapack-dev \
-    python3-dev \
-    build-base \
-    py3-pip \
-    bash
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first and install dependencies
+# Install build tools and Python headers
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libffi-dev \
+    libblas-dev \
+    liblapack-dev \
+    build-essential \
+    python3-dev \
+    bash \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
@@ -27,8 +23,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Expose port 8080 (required by Cloud Run)
+# Expose the Cloud Run port
 EXPOSE 8080
 
-# Command to run the app
+# Run the app
 CMD ["python", "main.py"]
