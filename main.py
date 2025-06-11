@@ -7,6 +7,7 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 CORS(app)
 
 # Load model and classes
@@ -14,7 +15,7 @@ model = joblib.load("model/lightgbm_model.pkl")
 with open("model/class.txt", "r") as f:
     class_names = [line.strip() for line in f.readlines()]
 
-@app.route("/api", methods=["GET"])
+@app.route("/api/", methods=["GET"])
 def home():
     return jsonify({"message": "Welcome to the model API!"})
 
@@ -114,4 +115,3 @@ def predict():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(debug=False, use_reloader=False, host="0.0.0.0", port=port)
-    
